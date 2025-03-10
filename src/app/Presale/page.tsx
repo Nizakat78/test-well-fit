@@ -4,7 +4,7 @@ import Presale from './Presale'
 
 const page = () => {
   return (
-    <div>
+    <div className='pt-5 pb-10 bg-gray-100'>
       <Presale />
     </div>
   )

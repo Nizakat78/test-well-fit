@@ -31,7 +31,7 @@ const Footer = () => {
       {/* Social Media Icons */}
       <div className="flex justify-center items-center gap-6 mb-6">
       <a
-          href="https://www.facebook.com/profile.php?id=61567781161379"
+          href=""
           target="Facebook"
           rel="noopener noreferrer"
           className="text-blue-700 hover:text-blue-600 text-2xl"
@@ -40,7 +40,7 @@ const Footer = () => {
         </a>
 
         <a
-          href="https://x.com/BerndGuggenber2"
+          href=""
           target="twitter"
           rel="noopener noreferrer"
           className="text-blue-500 hover:text-blue-400 text-2xl"
@@ -48,7 +48,7 @@ const Footer = () => {
           <i className="fab fa-twitter"> <FaTwitter /></i> {/* Font Awesome Twitter */}
         </a>
         <a
-          href="https://www.instagram.com/wellfit_original/"
+          href=""
           target="Instagram"
           rel="noopener noreferrer"
           className="text-blue-700 hover:text-blue-600 text-2xl"
@@ -56,7 +56,7 @@ const Footer = () => {
           <i className="fab fa-linkedin"><FaInstagram /></i> {/* Font Awesome Instagram */}
         </a>
         <a
-          href="https://www.youtube.com/channel/UC0nP_XYnDoIUfsKmhS926ug"
+          href=""
           target="Youtube "
           rel="noopener noreferrer"
           className="text-blue-700 hover:text-blue-600 text-2xl"
@@ -64,7 +64,7 @@ const Footer = () => {
           <i className="fab fa-linkedin"><TbBrandYoutubeFilled /></i> {/* Font Awesome Youtube */}
         </a>
         <a
-          href="https://www.tiktok.com/@wellfit_original"
+          href=""
           target="Tiktok "
           rel="noopener noreferrer"
           className="text-blue-700 hover:text-blue-600 text-2xl"
@@ -72,7 +72,7 @@ const Footer = () => {
           <i className="fab fa-linkedin"><AiFillTikTok /> </i> {/* Font Awesome Tiktok */}
         </a>
         <a
-          href="https://t.me/WellFit_io"
+          href=""
           target="Telegram"
           rel="noopener noreferrer"
           className="text-blue-700 hover:text-blue-600 text-2xl"

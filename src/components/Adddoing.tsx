@@ -24,7 +24,7 @@ const Adddoing = () => {
           Your active contribution to health and education
         </h1>
         <p className="mt-6 text-lg sm:text-xl text-gray-600">
-          WellFit goes beyond theory: our "learning by doing" approach offers
+          WellFit goes beyond theory: our &quot;learning by doing&quot; approach offers
           you interactive experiences that directly improve your health, fitness
           and skills. Whether in parks, museums, zoos or at home - with WellFit
           you can track your activities, receive personalized feedback and
@@ -70,7 +70,7 @@ const Adddoing = () => {
           </h3>
           <p className="text-center mt-3 text-sm sm:text-base text-gray-600">
             On every outing, you will expand your knowledge about our wonderful
-            "Mother Nature."
+            &quot;Mother Nature.&quot;
           </p>
         </div>
 

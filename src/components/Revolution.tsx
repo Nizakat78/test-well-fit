@@ -38,7 +38,7 @@ const Revolution = () => {
           We stay right now on our turning point where technology, innovation, health be combinated. After our pre-sale we will register our patent to protect and secure the exlusivite of our vision. Be part of our long term WellFit innovation. Be one of the early WellFit phase and you get an exclusive benefits and you safe your movement in the new worldwide standards.
           </p>
           <p className="text-gray-600 text-base lg:text-lg leading-relaxed mb-4">
-          We recently turned down a viable investment opportunity that would have cost us 50% of the shares. Why? Because we believe in our vision and don't want to sacrifice it for short-term gains. Your investment will help us achieve our long-term goals and keep WellFit in the hands of those who believe in sustainable change - like you.
+          We recently turned down a viable investment opportunity that would have cost us 50% of the shares. Why? Because we believe in our vision and don&#39;t want to sacrifice it for short-term gains. Your investment will help us achieve our long-term goals and keep WellFit in the hands of those who believe in sustainable change - like you.
           </p>
           <ul className="list-disc pl-6 mb-4">
             <li>Exclusive access through advance bookingn</li>

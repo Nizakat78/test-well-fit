@@ -1,120 +1,121 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { ethers } from "ethers";
 import Footer from "@/components/Footer";
+import { useWallet, useConnection } from "@solana/wallet-adapter-react";
+import Image from 'next/image';
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL } from "@solana/web3.js";
 
 const Presale = () => {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
-    hours: 14,
-    minutes: 48,
-    seconds: 28,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
   });
 
-  const [selectedCurrency, setSelectedCurrency] = useState("BTC");
-  const [walletConnected, setWalletConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState("");
+  const [selectedCurrency, setSelectedCurrency] = useState("SOL");
+  const [payAmount, setPayAmount] = useState(0);
+  const [receiveAmount, setReceiveAmount] = useState(0);
+  const [prices, setPrices] = useState({ SOL: 0, USDC: 1, USDT: 1 });
+  const { publicKey, connected, signTransaction } = useWallet();
+  const { connection } = useConnection();
 
   useEffect(() => {
+    const targetDate = new Date("2025-04-30T00:00:00Z").getTime();
+
     const countdown = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        let { days, hours, minutes, seconds } = prevTime;
+      const now = new Date().getTime();
+      const distance = targetDate - now;
 
-        if (seconds > 0) {
-          seconds--;
-        } else if (minutes > 0) {
-          minutes--;
-          seconds = 59;
-        } else if (hours > 0) {
-          hours--;
-          minutes = 59;
-          seconds = 59;
-        } else if (days > 0) {
-          days--;
-          hours = 23;
-          minutes = 59;
-          seconds = 59;
-        } else {
-          clearInterval(countdown);
-        }
+      if (distance < 0) {
+        clearInterval(countdown);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      } else {
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        return { days, hours, minutes, seconds };
-      });
+        setTimeLeft({ days, hours, minutes, seconds });
+      }
     }, 1000);
 
     return () => clearInterval(countdown); // Clean up interval on component unmount
   }, []);
 
-  const connectWallet = async () => {
-    if (typeof window.ethereum !== "undefined") {
+  useEffect(() => {
+    const fetchPrices = async () => {
       try {
-        // MetaMask Wallet Connection
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        await provider.send("eth_requestAccounts", []);
-        const signer = provider.getSigner();
-        const address = await signer.getAddress();
-        setWalletAddress(address);
-        setWalletConnected(true);
-        alert(`Wallet Connected: ${address}`);
+        const response = await fetch(
+          'https://api.coingecko.com/api/v3/simple/price?ids=solana,usd-coin,tether&vs_currencies=usd'
+        );
+        const data = await response.json();
+        setPrices({
+          SOL: data.solana.usd,
+          USDC: data['usd-coin'].usd,
+          USDT: data.tether.usd,
+        });
       } catch (error) {
-        console.error("Error connecting MetaMask wallet:", error);
-        alert("Failed to connect MetaMask wallet. Please try again.");
+        console.error('Error fetching prices:', error);
       }
-    } else if (window.sui) {
-      try {
-        // SUI Wallet Connection (Assuming window.sui is available)
-        const provider = new window.sui.SuiProvider(); // Or whatever SUI provider method
-        const address = await provider.getAddress();
-        setWalletAddress(address);
-        setWalletConnected(true);
-        alert(`SUI Wallet Connected: ${address}`);
-      } catch (error) {
-        console.error("Error connecting SUI wallet:", error);
-        alert("Failed to connect SUI wallet. Please try again.");
-      }
-    } else {
-      alert("No supported wallet extension found. Please install MetaMask or SUI wallet.");
-    }
-  };
+    };
+
+    fetchPrices();
+  }, []);
 
   const handleBuyNow = async () => {
-    if (!walletConnected) {
+    if (!connected) {
       alert("Please connect your wallet first.");
       return;
     }
 
     try {
-      let transaction;
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+      const transaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: publicKey!,
+          toPubkey: new PublicKey("YourRecipientAddress"), // Update with your recipient address
+          lamports: LAMPORTS_PER_SOL * payAmount, // Amount in SOL
+        })
+      );
 
-      if (selectedCurrency === "SUI") {
-        // Use SUI wallet for transaction (adjust this as per SUI's API for transaction)
-        const suiTransaction = {
-          to: "0xYourSuiRecipientAddress", // Update with SUI address
-          value: "0.01 SUI", // Adjust the SUI amount
-        };
-        // Sending transaction for SUI (this method should be updated as per SUI API)
-        const txResponse = await window.sui.sendTransaction(suiTransaction); // Example method
-        alert(`SUI Transaction sent! TX Hash: ${txResponse.hash}`);
-      } else {
-        // Use ETH/MetaMask for transaction
-        transaction = {
-          to: "0xYourContractOrRecipientAddress", // Update with your contract address or recipient
-          value: ethers.utils.parseEther("0.01"), // ETH amount (0.01 ETH in this example)
-        };
-        const txResponse = await signer.sendTransaction(transaction);
-        alert(`Transaction sent! TX Hash: ${txResponse.hash}`);
+      const { blockhash } = await connection.getRecentBlockhash();
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = publicKey!;
+
+      if (!signTransaction) {
+        throw new Error("signTransaction is undefined");
       }
+      const signedTransaction = await signTransaction(transaction);
+      const signature = await connection.sendRawTransaction(signedTransaction.serialize());
+      await connection.confirmTransaction(signature, "confirmed");
+
+      alert(`Transaction sent! TX Signature: ${signature}`);
     } catch (error) {
       console.error("Transaction error:", error);
       alert("Transaction failed. Please try again.");
     }
   };
 
+  const handlePayAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const amount = parseFloat(e.target.value);
+    setPayAmount(amount);
+
+    let usdAmount = 0;
+    if (selectedCurrency === "SOL") {
+      usdAmount = amount * prices.SOL;
+    } else if (selectedCurrency === "USDC") {
+      usdAmount = amount * prices.USDC;
+    } else if (selectedCurrency === "USDT") {
+      usdAmount = amount * prices.USDT;
+    }
+
+    setReceiveAmount(usdAmount / 0.001); // Assuming 1 $WFT = 0.001 USD
+  };
+
   return (
-    <div>
-      <div className="min-h-screen flex justify-center items-center  bg-gray-100">
+    <div className="pt-5  bg-gray-100">
+      <div className="min-h-screen flex justify-center items-center bg-gray-100 pb-10">
         <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
           {/* Title */}
           <h1 className="text-center text-2xl font-bold text-orange-600">
@@ -147,7 +148,7 @@ const Presale = () => {
           {/* Pricing Section */}
           <div className="mt-6 text-sm text-gray-700">
             <p className="flex justify-between">
-              <span>1 $HINU:</span> <span className="font-bold">$0.00012500 USD</span>
+              <span>1 $WFT:</span> <span className="font-bold">$0.00012500 USD</span>
             </p>
             <p className="flex justify-between">
               <span>Current Price:</span> <span className="font-bold">$0.00012500 USD</span>
@@ -169,30 +170,36 @@ const Presale = () => {
           {/* Buy Section */}
           <div className="mt-6">
             <h3 className="text-center font-medium text-gray-800">
-              Buy or Stake $HINU Now
+              Buy $WFT Now
             </h3>
 
             {/* Payment Icons */}
-            <div className="flex justify-center gap-24 mt-4">
-              <img
-                src="/Sui.svg"
-                alt="SUI"
+            <div className="flex justify-center gap-20 mt-4">
+              <Image
+                src="/Sol.avif"
+                alt="SOL"
+                width={50}
+                height={50}
                 className={`w-8 h-8 cursor-pointer ${
-                  selectedCurrency === "SUI" ? "ring-2 ring-orange-600" : ""
+                  selectedCurrency === "SOL" ? "ring-2 ring-orange-600" : ""
                 }`}
-                onClick={() => setSelectedCurrency("SUI")}
+                onClick={() => setSelectedCurrency("SOL")}
               />
-              <img
+              <Image
                 src="/USDC.svg"
                 alt="USDC"
+                width={32}
+                height={32}
                 className={`w-8 h-8 cursor-pointer ${
                   selectedCurrency === "USDC" ? "ring-2 ring-orange-600" : ""
                 }`}
                 onClick={() => setSelectedCurrency("USDC")}
               />
-              <img
+              <Image
                 src="/USDT.svg"
-                alt="usdt"
+                alt="USDT"
+                width={32}
+                height={32}
                 className={`w-8 h-8 cursor-pointer ${
                   selectedCurrency === "USDT" ? "ring-2 ring-orange-600" : ""
                 }`}
@@ -206,31 +213,31 @@ const Presale = () => {
                 type="number"
                 placeholder={`Pay with ${selectedCurrency}`}
                 className="w-full px-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-600"
+                value={payAmount}
+                onChange={handlePayAmountChange}
               />
               <input
                 type="number"
-                placeholder="Receive $HINU"
+                placeholder="Receive $Well Fit"
                 className="w-full px-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-600"
+                value={receiveAmount}
+                readOnly
               />
             </div>
 
-            {/* Connect Wallet Button */}
-            {!walletConnected && (
+            {/* Connect Wallet and Buy Button */}
+            <div className="flex justify-between items-center mt-4 gap-1">
+              <WalletMultiButton className="flex-1 bg-orange-600 text-white py-3 rounded-md text-sm font-medium hover:bg-orange-700">
+                {connected ? "Wallet Connected" : "Connect Wallet"}
+              </WalletMultiButton>
               <button
-                className="w-full bg-blue-600 text-white py-3 rounded-md mt-4 text-sm font-medium hover:bg-blue-700"
-                onClick={connectWallet}
+                className="flex-1 bg-orange-600 text-white py-3 rounded-md text-sm font-medium hover:bg-orange-700"
+                onClick={handleBuyNow}
+                disabled={!connected}
               >
-                Connect Wallet
+                Buy Now
               </button>
-            )}
-
-            {/* Buy Button */}
-            <button
-              className="w-full bg-orange-600 text-white py-3 rounded-md mt-4 text-sm font-medium hover:bg-orange-700"
-              onClick={handleBuyNow}
-            >
-              Buy Now
-            </button>
+            </div>
             <p className="text-center text-xs text-gray-500 mt-2">
               How to buy? <a href="#" className="text-orange-600 underline">(Click Here)</a>
             </p>

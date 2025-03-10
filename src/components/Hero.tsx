@@ -2,7 +2,7 @@ import React from "react";
 
 const HeroSection = () => {
   return (
-    <section Id="Hero"
+    <section id="Hero"
        className="relative h-screen flex items-center justify-center bg-cover bg-center"
       style={{
         backgroundImage: "url('/Hero.svg')", 
@@ -21,7 +21,7 @@ const HeroSection = () => {
           and knowledge
         </p>
         <button className="bg-green-500 hover:bg-green-600 text-white text-base sm:text-lg px-6 py-3 rounded-full font-bold transition">
-          Los Geht's
+          Los Geht&apos;s
         </button>
       </div>
     </section>

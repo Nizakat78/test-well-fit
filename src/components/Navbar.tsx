@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Image from "next/image";
 
 const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -12,9 +13,7 @@ const Navbar: React.FC = () => {
     <header className="bg-black text-white shadow-lg">
       <div className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}
-        <div className="flex items-center">
-          <img src="/logo.svg" alt="Logo" className="h-12 w-auto mr-4" />
-        </div>
+        <Image src="/logo.svg" alt="Logo" width={48} height={48} className="h-12 w-auto mr-4" />
 
         {/* Hamburger Icon (for mobile) */}
         <button

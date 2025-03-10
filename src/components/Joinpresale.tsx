@@ -7,7 +7,7 @@ const Joinpresale = () => {
       {/* Left Text Section */}
       <div className="md:w-1/2 mb-6 md:mb-0 text-center md:text-left">
         <h1 className="text-2xl md:text-4xl font-bold mb-4">
-          Don't miss your chance <br />
+          Don&apos;t miss your chance <br />
           <span className="text-yellow-300">become part of WellFit</span> and actively shape the future!
         </h1>
         <a 

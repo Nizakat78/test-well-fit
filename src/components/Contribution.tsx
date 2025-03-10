@@ -40,8 +40,8 @@ const Contribution = () => {
             Your contribution makes a difference.
           </p>
           <p className="text-lg sm:text-xl leading-relaxed mb-4">
-            You won't just witness a revolution in health and technology –
-            you'll actively shape it. Together, we're building a world where
+            You won&rsquo;t just witness a revolution in health and technology –
+            you&apos;ll actively shape it. Together, we&apos;re building a world where
             wellness and knowledge go hand in hand. Join us as WellFit moves the
             world forward.
           </p>
