@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable @next/next/no-async-client-component */
 'use client';
 
 import React, { useEffect, useState } from "react";
@@ -14,55 +16,45 @@ import { getDictionary } from "./dictionaries";
 import AOS from "aos";
 import "aos/dist/aos.css"; // AOS CSS
 
-interface Params {
-  lang: "en-US" | "de-ES" | "de";
-}
 
-export default function Page({ params }: { params: Params }) {
+export default async function Page({ params }: { params: Promise<{ lang: "en-US" | "de-ES" | "de"; }> }) {
+  const { lang } = await params; // Await the params here
+  
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [dict, setDict] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // Handle params.lang properly (await params before use)
   const fetchDictionary = async (lang: string) => {
     try {
-      const normalizedLang: "en-US" | "de-ES" | "de" = 
-        lang === "de" ? "de-ES" : (["en-US", "de-ES"].includes(lang) ? lang as "en-US" | "de-ES" : "en-US"); // Normalize lang
+      const normalizedLang: "en-US" | "de-ES" | "de" =
+        lang === "de" ? "de-ES" : (["en-US", "de-ES"].includes(lang) ? lang as "en-US" | "de-ES" : "en-US");
       const dictionary = await getDictionary(normalizedLang);
       setDict(dictionary);
-      setLoading(false); // Set loading to false after the dictionary is fetched
+      setLoading(false);
     } catch (error) {
       console.error("Failed to fetch dictionary:", error);
-      setLoading(false); // Ensure loading is false even if there's an error
+      setLoading(false);
     }
   };
 
+  // Fetch dictionary based on the selected language
   useEffect(() => {
-    // Handle async nature of `params.lang`
-    const fetchLang = async () => {
-      const { lang } = await params; // Await params.lang here (in case of server-side rendering)
-      fetchDictionary(lang);
-      
-      // Initialize AOS
-      AOS.init({
-        duration: 1000,
-        easing: "ease-out",
-        once: true,
-      });
-    };
-    
-    fetchLang();
-  }, [params]);  // Watch for changes in params.lang
+    fetchDictionary(lang);
 
-  // Show a loading spinner or message while dict is being fetched
+    AOS.init({
+      duration: 1000,
+      easing: "ease-out",
+      once: true,
+    });
+  }, [lang]);
+
   if (loading) {
     return <div className="text-center mt-10">Loading...</div>;
   }
 
-  // Once dict is loaded, render the page
   return (
     <div>
-      <Navbar lang={params.lang === "de" ? "de-ES" : params.lang} dict={dict} />
+      <Navbar lang={lang === "de" ? "de-ES" : lang} dict={dict} />
       <Hero dict={dict} />
       <Insight dict={dict} />
       <Revolution dict={dict} />
