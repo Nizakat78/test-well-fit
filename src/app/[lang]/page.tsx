@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable @next/next/no-async-client-component */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useEffect, useState } from "react";
@@ -17,13 +16,11 @@ import AOS from "aos";
 import "aos/dist/aos.css"; // AOS CSS
 
 
-export default async function Page({ params }: { params: Promise<{ lang: "en-US" | "de-ES" | "de"; }> }) {
-  const { lang } = await params; // Await the params here
-  
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function Page({ params }: { params: { lang: "en-US" | "de-ES" | "de"; } }) {
   const [dict, setDict] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  // Fetch dictionary based on language
   const fetchDictionary = async (lang: string) => {
     try {
       const normalizedLang: "en-US" | "de-ES" | "de" =
@@ -37,24 +34,26 @@ export default async function Page({ params }: { params: Promise<{ lang: "en-US"
     }
   };
 
-  // Fetch dictionary based on the selected language
+  // UseEffect to load the dictionary when language changes
   useEffect(() => {
-    fetchDictionary(lang);
+    fetchDictionary(params.lang);
 
     AOS.init({
       duration: 1000,
       easing: "ease-out",
       once: true,
     });
-  }, [lang]);
+  }, [params.lang]);
 
+  // Show loading while dictionary is being fetched
   if (loading) {
     return <div className="text-center mt-10">Loading...</div>;
   }
 
+  // Return the layout once the dictionary is loaded
   return (
     <div>
-      <Navbar lang={lang === "de" ? "de-ES" : lang} dict={dict} />
+      <Navbar lang={params.lang === "de" ? "de-ES" : params.lang} dict={dict} />
       <Hero dict={dict} />
       <Insight dict={dict} />
       <Revolution dict={dict} />
