@@ -1,12 +1,11 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from 'next/navigation'; // Import the router for programmatic navigation
-import AOS from 'aos'; // Import AOS
-import 'aos/dist/aos.css'; // AOS CSS
+import { useRouter } from "next/navigation"; // Import the router for programmatic navigation
+import AOS from "aos"; // Import AOS
+import "aos/dist/aos.css"; // AOS CSS
 
 const Navbar: React.FC<{ dict: any, lang: 'en-US' | 'de-ES' }> = ({ dict, lang }) => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -50,7 +49,7 @@ const Navbar: React.FC<{ dict: any, lang: 'en-US' | 'de-ES' }> = ({ dict, lang }
   const presaleLink = `/${selectedLang}/Presale`;
 
   return (
-    <header className="bg-black text-white shadow-lg">
+    <header className="bg-black text-white shadow-lg fixed w-full top-0 left-0 z-20">
       <div className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}
         <div data-aos="fade-down" data-aos-delay="100">

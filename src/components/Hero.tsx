@@ -5,13 +5,13 @@ import 'aos/dist/aos.css'; // Import AOS CSS
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const HeroSection = ({ dict }: { dict: any }) => {
   useEffect(() => {
-    // Initialize AOS when the component mounts
+    
     AOS.init({
-      duration: 1000, // Animation duration
-      easing: "ease-out", // Easing function
-      once: true, // Animation happens only once
+      duration: 1000, 
+      easing: "ease-out", 
+      once: true,
     });
-  }, []); // Empty array ensures it runs only once when the component mounts
+  }, []); 
 
   return (
     <section
@@ -43,7 +43,7 @@ const HeroSection = ({ dict }: { dict: any }) => {
         <button
           className="bg-green-500 hover:bg-green-600 text-white text-base sm:text-lg px-6 py-3 rounded-full font-bold transition"
           data-aos="fade-up" // AOS fade-up effect
-          data-aos-delay="600" // Optional delay to stagger animations
+          data-aos-delay="600" 
         >
           {dict.hero?.button || "Los Geht&apos;s"}
         </button>
