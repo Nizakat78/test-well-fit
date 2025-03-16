@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-'use client';
-
+"use client"
+// src/app/[lang]/Presale/page.tsx
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -11,12 +10,17 @@ import Contribution from "@/components/Contribution";
 import Shaping from "@/components/Shaping";
 import Joinpresale from "@/components/Joinpresale";
 import Footer from "@/components/Footer";
-import { getDictionary } from "./dictionaries";
+import { getDictionary } from "./dictionaries"; // Assuming you have a method to fetch the dictionary
 import AOS from "aos";
 import "aos/dist/aos.css"; // AOS CSS
 
+interface Params {
+  lang: "en-US" | "de-ES" | "de";
+}
 
-export default function Page({ params }: { params: { lang: "en-US" | "de-ES" | "de"; } }) {
+export default async function Page({ params }: { params: Promise<{ lang: "en-US" | "de-ES" | "de" }> }) {
+  const { lang } = await params; // Await params here to resolve the Promise
+
   const [dict, setDict] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -36,14 +40,14 @@ export default function Page({ params }: { params: { lang: "en-US" | "de-ES" | "
 
   // UseEffect to load the dictionary when language changes
   useEffect(() => {
-    fetchDictionary(params.lang);
+    fetchDictionary(lang);
 
     AOS.init({
       duration: 1000,
       easing: "ease-out",
       once: true,
     });
-  }, [params.lang]);
+  }, [lang]);
 
   // Show loading while dictionary is being fetched
   if (loading) {
@@ -53,7 +57,7 @@ export default function Page({ params }: { params: { lang: "en-US" | "de-ES" | "
   // Return the layout once the dictionary is loaded
   return (
     <div>
-      <Navbar lang={params.lang === "de" ? "de-ES" : params.lang} dict={dict} />
+      <Navbar lang={lang} dict={dict} />
       <Hero dict={dict} />
       <Insight dict={dict} />
       <Revolution dict={dict} />
