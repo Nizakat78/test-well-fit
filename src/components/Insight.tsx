@@ -22,7 +22,7 @@ const Insight = ({ dict }: { dict: any }) => {
           {/* Logo */}
           <div className="mb-4" data-aos="fade-up">
             <Image
-              src="/logo.svg"
+              src="/logo.png"
               alt={dict.insight?.logoAlt || "WellFit Logo"}
               width={80}
               height={80}
