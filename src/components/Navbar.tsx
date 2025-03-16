@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"; // Import the router for programmat
 import AOS from "aos"; // Import AOS
 import "aos/dist/aos.css"; // AOS CSS
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Navbar: React.FC<{ dict: any, lang: 'en-US' | 'de-ES' }> = ({ dict, lang }) => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState(lang);
