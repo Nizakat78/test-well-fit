@@ -21,7 +21,7 @@ const Adddoing = ({ dict }: { dict: any }) => {
       {/* Logo Section */}
       <div className="mb-8">
         <Image
-          src="/logo.svg" 
+          src="/logo.png" 
           alt="WellFit"
           width={80}
           height={80}

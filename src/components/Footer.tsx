@@ -25,7 +25,7 @@ const Footer = ({ dict }: { dict: any }) => {
       {/* Logo Section */}
       <div className="mb-6" data-aos="fade-up">
         <Image
-          src="/logo.svg"
+          src="/logo.png"
           alt="WellFit Logo"
           width={100}
           height={100}

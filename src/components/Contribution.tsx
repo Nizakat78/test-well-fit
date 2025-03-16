@@ -28,7 +28,7 @@ const Contribution = ({ dict }: { dict: any }) => {
         >
           <div className="mb-8">
             <Image
-              src="/logo.svg"
+              src="/logo.png"
               alt="WellFit Logo"
               width={100}
               height={100}

@@ -55,7 +55,7 @@ const Navbar: React.FC<{ dict: any, lang: 'en-US' | 'de-ES' }> = ({ dict, lang }
         {/* Logo */}
         <div data-aos="fade-down" data-aos-delay="100">
           <Image
-            src="/logo.svg"
+            src="/logo.png"
             alt="Logo"
             width={48}
             height={48}

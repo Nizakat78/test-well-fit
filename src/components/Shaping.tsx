@@ -37,7 +37,7 @@ const Shaping = ({ dict }: { dict: any }) => {
           {/* Logo Section */}
           <div className="mb-8" data-aos="fade-up">
             <Image
-              src="/logo.svg"
+              src="/logo.png"
               alt={dict.shaping?.logoAlt || "WellFit Logo"}
               width={100}
               height={100}
