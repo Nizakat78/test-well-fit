@@ -1,25 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"; // Ensure this is a Client Component
 
 import React, { useEffect, useState } from "react";
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import Insight from "@/components/Insight";
-import Revolution from "@/components/Revolution";
-import Adddoing from "@/components/Adddoing";
-import Contribution from "@/components/Contribution";
-import Shaping from "@/components/Shaping";
-import Joinpresale from "@/components/Joinpresale";
-import Footer from "@/components/Footer";
+import dynamic from "next/dynamic"; // For lazy loading components
 import { getDictionary } from "./dictionaries"; // Assuming you have a method to fetch the dictionary
 import AOS from "aos";
 import "aos/dist/aos.css"; // AOS CSS
+
+// Lazy load components to reduce initial load time
+const Navbar = dynamic(() => import("@/components/Navbar"), { ssr: false });
+const Hero = dynamic(() => import("@/components/Hero"), { ssr: false });
+const Insight = dynamic(() => import("@/components/Insight"), { ssr: false });
+const Revolution = dynamic(() => import("@/components/Revolution"), { ssr: false });
+const Adddoing = dynamic(() => import("@/components/Adddoing"), { ssr: false });
+const Contribution = dynamic(() => import("@/components/Contribution"), { ssr: false });
+const Shaping = dynamic(() => import("@/components/Shaping"), { ssr: false });
+const Joinpresale = dynamic(() => import("@/components/Joinpresale"), { ssr: false });
+const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
 
 export default function Page({
   params,
 }: {
   params: Promise<{ lang: "en-US" | "de-ES" | "de" }>;
 }) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [dict, setDict] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [lang, setLang] = useState<"en-US" | "de-ES" | "de">("en-US");
@@ -27,7 +30,7 @@ export default function Page({
   // Fetch params after they resolve (unwrap the Promise)
   useEffect(() => {
     const fetchParams = async () => {
-      const resolvedParams = await params; // Unwrap the Promise to get lang
+      const resolvedParams = await params;
       setLang(resolvedParams.lang === "de" ? "de-ES" : resolvedParams.lang);
     };
     fetchParams();
@@ -59,14 +62,14 @@ export default function Page({
     });
   }, [lang]);
 
-  // If still loading, show a professional loading screen
+  // If still loading, show a fast, minimal loading screen
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <div className="text-center">
           <div className="loader border-t-4 border-blue-500 border-solid rounded-full h-16 w-16 animate-spin mx-auto mb-4"></div>
           <p className="text-xl font-semibold text-gray-600">Welcome to WellFit</p>
-          <p className="text-sm text-gray-500">Loading, please wait...</p>
+          <p className="text-sm text-gray-500">Loading...</p>
         </div>
       </div>
     );
