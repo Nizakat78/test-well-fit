@@ -180,7 +180,7 @@ const Presale = ({ dict }: { dict: any }) => {
             {/* Payment Icons */}
             <div className="flex justify-center gap-20 mt-4">
               <Image
-                src="/Sol.avif"
+                src="/Sol.png"
                 alt="SOL"
                 width={50}
                 height={50}

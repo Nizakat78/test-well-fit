@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client" // Ensures this is a Client Component
+"use client"; // Ensure this is a Client Component
+
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -14,12 +14,12 @@ import { getDictionary } from "./dictionaries"; // Assuming you have a method to
 import AOS from "aos";
 import "aos/dist/aos.css"; // AOS CSS
 
-
 export default function Page({
   params,
 }: {
   params: Promise<{ lang: "en-US" | "de-ES" | "de" }>;
 }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [dict, setDict] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [lang, setLang] = useState<"en-US" | "de-ES" | "de">("en-US");
@@ -28,7 +28,7 @@ export default function Page({
   useEffect(() => {
     const fetchParams = async () => {
       const resolvedParams = await params; // Unwrap the Promise to get lang
-      setLang(resolvedParams.lang);
+      setLang(resolvedParams.lang === "de" ? "de-ES" : resolvedParams.lang);
     };
     fetchParams();
   }, [params]);
@@ -51,20 +51,30 @@ export default function Page({
     if (lang) {
       fetchDictionary();
     }
+
     AOS.init({
       duration: 1000,
       easing: "ease-out",
       once: true,
     });
-  }, [lang]); // Run this effect whenever the lang changes
+  }, [lang]);
 
+  // If still loading, show a professional loading screen
   if (loading) {
-    return <div className="text-center mt-10">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="text-center">
+          <div className="loader border-t-4 border-blue-500 border-solid rounded-full h-16 w-16 animate-spin mx-auto mb-4"></div>
+          <p className="text-xl font-semibold text-gray-600">Welcome to WellFit</p>
+          <p className="text-sm text-gray-500">Loading, please wait...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div>
-      <Navbar lang={lang} dict={dict} />
+      <Navbar lang={lang === "de" ? "de-ES" : lang} dict={dict} />
       <Hero dict={dict} />
       <Insight dict={dict} />
       <Revolution dict={dict} />
