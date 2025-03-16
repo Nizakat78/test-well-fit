@@ -1,12 +1,13 @@
-"use client";
+"use client"
 import React, { useState, useEffect } from "react";
 import Footer from "@/components/Footer";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
-import Image from 'next/image';
+import Image from "next/image";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL } from "@solana/web3.js";
 
-const Presale = () => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Presale = ({ dict }: { dict: any }) => {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -48,16 +49,16 @@ const Presale = () => {
     const fetchPrices = async () => {
       try {
         const response = await fetch(
-          'https://api.coingecko.com/api/v3/simple/price?ids=solana,usd-coin,tether&vs_currencies=usd'
+          "https://api.coingecko.com/api/v3/simple/price?ids=solana,usd-coin,tether&vs_currencies=usd"
         );
         const data = await response.json();
         setPrices({
           SOL: data.solana.usd,
-          USDC: data['usd-coin'].usd,
+          USDC: data["usd-coin"].usd,
           USDT: data.tether.usd,
         });
       } catch (error) {
-        console.error('Error fetching prices:', error);
+        console.error("Error fetching prices:", error);
       }
     };
 
@@ -114,12 +115,12 @@ const Presale = () => {
   };
 
   return (
-    <div className="pt-5  bg-gray-100">
+    <div className="pt-5 bg-gray-100">
       <div className="min-h-screen flex justify-center items-center bg-gray-100 pb-10">
         <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
           {/* Title */}
           <h1 className="text-center text-2xl font-bold text-orange-600">
-            Buy Before the Price Rises!
+            {dict.presale?.title || "Buy Before the Price Rises!"}
           </h1>
 
           {/* Timer Section */}
@@ -142,19 +143,22 @@ const Presale = () => {
             </div>
           </div>
           <p className="text-center text-sm text-gray-500 mt-2">
-            UNTIL NEXT PRICE INCREASE
+            {dict.presale?.countdownText || "UNTIL NEXT PRICE INCREASE"}
           </p>
 
           {/* Pricing Section */}
           <div className="mt-6 text-sm text-gray-700">
             <p className="flex justify-between">
-              <span>1 $WFT:</span> <span className="font-bold">$0.00012500 USD</span>
+              <span>{dict.presale?.wftPriceLabel || "1 $WFT:"}</span>{" "}
+              <span className="font-bold">$0.00012500 USD</span>
             </p>
             <p className="flex justify-between">
-              <span>Current Price:</span> <span className="font-bold">$0.00012500 USD</span>
+              <span>{dict.presale?.currentPriceLabel || "Current Price:"}</span>{" "}
+              <span className="font-bold">$0.00012500 USD</span>
             </p>
             <p className="flex justify-between">
-              <span>After Price:</span> <span className="font-bold">$0.00015000 USD</span>
+              <span>{dict.presale?.afterPriceLabel || "After Price:"}</span>{" "}
+              <span className="font-bold">$0.00015000 USD</span>
             </p>
             <div className="relative w-full bg-gray-200 rounded-full h-2 mt-3">
               <div
@@ -163,14 +167,14 @@ const Presale = () => {
               ></div>
             </div>
             <p className="text-xs text-gray-500 mt-2">
-              Over $473177/$600000 USD raised!
+              {dict.presale?.raisedLabel || "Over $473177/$600000 USD raised!"}
             </p>
           </div>
 
           {/* Buy Section */}
           <div className="mt-6">
             <h3 className="text-center font-medium text-gray-800">
-              Buy $WFT Now
+              {dict.presale?.buyNow || "Buy $WFT Now"}
             </h3>
 
             {/* Payment Icons */}
@@ -211,14 +215,14 @@ const Presale = () => {
             <div className="mt-4 space-y-3">
               <input
                 type="number"
-                placeholder={`Pay with ${selectedCurrency}`}
+                placeholder={`${dict.presale?.payWith || "Pay with"} ${selectedCurrency}`}
                 className="w-full px-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-600"
                 value={payAmount}
                 onChange={handlePayAmountChange}
               />
               <input
                 type="number"
-                placeholder="Receive $Well Fit"
+                placeholder={dict.presale?.receive || "Receive $Well Fit"}
                 className="w-full px-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-600"
                 value={receiveAmount}
                 readOnly
@@ -228,27 +232,32 @@ const Presale = () => {
             {/* Connect Wallet and Buy Button */}
             <div className="flex justify-between items-center mt-4 gap-1">
               <WalletMultiButton className="flex-1 bg-orange-600 text-white py-3 rounded-md text-sm font-medium hover:bg-orange-700">
-                {connected ? "Wallet Connected" : "Connect Wallet"}
+                {connected ? dict.presale?.walletConnected || "Wallet Connected" : dict.presale?.connectWallet || "Connect Wallet"}
               </WalletMultiButton>
               <button
                 className="flex-1 bg-orange-600 text-white py-3 rounded-md text-sm font-medium hover:bg-orange-700"
                 onClick={handleBuyNow}
                 disabled={!connected}
               >
-                Buy Now
+                {dict.presale?.buyNowButton || "Buy Now"}
               </button>
             </div>
             <p className="text-center text-xs text-gray-500 mt-2">
-              How to buy? <a href="#" className="text-orange-600 underline">(Click Here)</a>
+              {dict.presale?.howToBuy || "How to buy?"}{" "}
+              <a href="#" className="text-orange-600 underline">
+                {dict.presale?.clickHere || "(Click Here)"}
+              </a>
             </p>
           </div>
 
           {/* Footer */}
-          <p className="text-center text-xs text-gray-500 mt-8">Your TMT token presale</p>
+          <p className="text-center text-xs text-gray-500 mt-8">
+            {dict.presale?.footerText || "Your TMT token presale"}
+          </p>
         </div>
       </div>
 
-      <Footer />
+      <Footer dict={dict} />
     </div>
   );
 };
