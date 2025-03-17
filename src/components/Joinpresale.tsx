@@ -9,11 +9,11 @@ const Joinpresale = ({ dict }: { dict: any }) => {
   useEffect(() => {
     // Initialize AOS when the component mounts
     AOS.init({
-      duration: 1000, // Animation duration
-      easing: 'ease-out', // Easing function
-      once: true, // Animation happens only once
+      duration: 1000,
+      easing: 'ease-out',
+      once: true,
     });
-  }, []); // Empty array ensures it runs only once when the component mounts
+  }, []);
 
   return (
     <section className="bg-blue-500 text-white p-6 md:p-12 rounded-lg flex flex-col md:flex-row items-center justify-between">
@@ -52,7 +52,9 @@ const Joinpresale = ({ dict }: { dict: any }) => {
           <Image
             src="/Joinpresale.svg"
             alt={dict.joinpresale?.imageAlt || "Illustration of a WellFit promotion"}
-            fill
+            layout="intrinsic"  // This will ensure the image maintains its aspect ratio
+            width={400}
+            height={400}
             className="object-contain rounded-lg"
           />
         </div>

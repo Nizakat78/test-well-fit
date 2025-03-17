@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { match } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
 
-const locales = ['en-US', 'es-ES', 'es'];
+const locales = ['en-US', 'de-ES'];
 
 function getLocale(request) {
   const headers = { 'accept-language': request.headers.get('accept-language') };
@@ -13,6 +13,12 @@ function getLocale(request) {
 
 export function middleware(request) {
   const { pathname } = request.nextUrl;
+  
+  // Exclude static files (e.g., Whitepaper.pdf) and Next.js internals (_next)
+  if (pathname.startsWith('/_next') || pathname === '/Whitepaper.pdf') {
+    return;
+  }
+
   const pathnameHasLocale = locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
@@ -26,6 +32,6 @@ export function middleware(request) {
 
 export const config = {
   matcher: [
-    '/((?!_next).*)',
+    '/((?!_next).*)', // Apply to all routes except _next
   ],
 };

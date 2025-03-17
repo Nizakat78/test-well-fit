@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Import the router for programmatic navigation
+import { useRouter, usePathname } from "next/navigation"; // Import usePathname to get the current path
 import AOS from "aos"; // Import AOS
 import "aos/dist/aos.css"; // AOS CSS
 
@@ -13,25 +13,28 @@ const Navbar: React.FC<{ dict: any, lang: 'en-US' | 'de-ES' }> = ({ dict, lang }
   const [selectedLang, setSelectedLang] = useState(lang);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // To handle dropdown visibility
   const router = useRouter();
+  const pathname = usePathname(); // Get the current path for link management
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false); // This will close the mobile menu
+  };
+
   const changeLanguage = (newLang: 'en-US' | 'de-ES') => {
     setSelectedLang(newLang);
-
-    const currentPath = window.location.pathname;
-    let newPath = currentPath;
+    let newPath = pathname;
 
     // Check for existing language in the URL and replace it with the new language
-    if (currentPath.startsWith('/en-US')) {
-      newPath = currentPath.replace('/en-US', `/${newLang}`);
-    } else if (currentPath.startsWith('/de-ES')) {
-      newPath = currentPath.replace('/de-ES', `/${newLang}`);
+    if (pathname.startsWith('/en-US')) {
+      newPath = pathname.replace('/en-US', `/${newLang}`);
+    } else if (pathname.startsWith('/de-ES')) {
+      newPath = pathname.replace('/de-ES', `/${newLang}`);
     } else {
       // If there is no language in the path, prepend the selected language
-      newPath = `/${newLang}${currentPath}`;
+      newPath = `/${newLang}${pathname}`;
     }
 
     router.push(newPath); // Redirect to the new language path
@@ -48,6 +51,8 @@ const Navbar: React.FC<{ dict: any, lang: 'en-US' | 'de-ES' }> = ({ dict, lang }
 
   // Generate the path for the "Buy Now" button dynamically
   const presaleLink = `/${selectedLang}/Presale`;
+  // Generate the path for the "Whitepaper" file dynamically
+  const whitepaperFileLink = `/${selectedLang}/Whitepaper`;
 
   return (
     <header className="bg-black text-white shadow-lg fixed w-full top-0 left-0 z-20">
@@ -97,6 +102,7 @@ const Navbar: React.FC<{ dict: any, lang: 'en-US' | 'de-ES' }> = ({ dict, lang }
             className="block md:inline hover:text-green-400"
             data-aos="fade-up"
             data-aos-delay="300"
+            onClick={closeMobileMenu} // Close mobile menu when a link is clicked
           >
             {dict.nav?.home || "HOME"}
           </Link>
@@ -105,6 +111,7 @@ const Navbar: React.FC<{ dict: any, lang: 'en-US' | 'de-ES' }> = ({ dict, lang }
             className="block md:inline hover:text-green-400"
             data-aos="fade-up"
             data-aos-delay="400"
+            onClick={closeMobileMenu} // Close mobile menu when a link is clicked
           >
             {dict.nav?.technology || "TECHNOLOGY"}
           </Link>
@@ -113,6 +120,7 @@ const Navbar: React.FC<{ dict: any, lang: 'en-US' | 'de-ES' }> = ({ dict, lang }
             className="block md:inline hover:text-green-400"
             data-aos="fade-up"
             data-aos-delay="500"
+            onClick={closeMobileMenu} // Close mobile menu when a link is clicked
           >
             {dict.nav?.revolution || "REVOLUTION"}
           </Link>
@@ -121,6 +129,7 @@ const Navbar: React.FC<{ dict: any, lang: 'en-US' | 'de-ES' }> = ({ dict, lang }
             className="block md:inline hover:text-green-400"
             data-aos="fade-up"
             data-aos-delay="600"
+            onClick={closeMobileMenu} // Close mobile menu when a link is clicked
           >
             {dict.nav?.addingDoing || "ADDING DOING"}
           </Link>
@@ -129,16 +138,18 @@ const Navbar: React.FC<{ dict: any, lang: 'en-US' | 'de-ES' }> = ({ dict, lang }
             className="block md:inline hover:text-green-400"
             data-aos="fade-up"
             data-aos-delay="700"
+            onClick={closeMobileMenu} // Close mobile menu when a link is clicked
           >
             {dict.nav?.investment || "INVESTMENT"}
           </Link>
+          {/* Dynamic Whitepaper Link */}
           <Link
-            href="/Whitepaper.pdf"
-            target="_blank"
+            href={whitepaperFileLink}
             rel="noopener noreferrer"
             className="block md:inline hover:text-green-400"
             data-aos="fade-up"
             data-aos-delay="800"
+            onClick={closeMobileMenu} // Close mobile menu when a link is clicked
           >
             {dict.nav?.whitepaper || "WHITEPAPER"}
           </Link>
@@ -158,13 +169,13 @@ const Navbar: React.FC<{ dict: any, lang: 'en-US' | 'de-ES' }> = ({ dict, lang }
               {isDropdownOpen && (
                 <div className="absolute bg-black text-white shadow-lg p-2 rounded mt-2 w-full z-20">
                   <button
-                    onClick={() => changeLanguage('en-US')}
+                    onClick={() => { changeLanguage('en-US'); closeMobileMenu(); }} // Close mobile menu when language is changed
                     className="block w-full text-left px-4 py-2 hover:bg-green-400"
                   >
                     English
                   </button>
                   <button
-                    onClick={() => changeLanguage('de-ES')}
+                    onClick={() => { changeLanguage('de-ES'); closeMobileMenu(); }} // Close mobile menu when language is changed
                     className="block w-full text-left px-4 py-2 hover:bg-green-400"
                   >
                     Deutsch
@@ -179,6 +190,7 @@ const Navbar: React.FC<{ dict: any, lang: 'en-US' | 'de-ES' }> = ({ dict, lang }
               className="bg-green-400 px-4 py-2 rounded-full hover:bg-green-500 text-black font-semibold"
               data-aos="fade-up"
               data-aos-delay="1000"
+              onClick={closeMobileMenu} // Close mobile menu when link is clicked
             >
               {dict.nav?.buyNow || "Buy Now"}
             </Link>
@@ -200,13 +212,13 @@ const Navbar: React.FC<{ dict: any, lang: 'en-US' | 'de-ES' }> = ({ dict, lang }
             {isDropdownOpen && (
               <div className="absolute bg-black text-white shadow-lg p-2 rounded mt-2 w-32 z-20">
                 <button
-                  onClick={() => changeLanguage('en-US')}
+                  onClick={() => { changeLanguage('en-US'); closeMobileMenu(); }} // Close mobile menu when language is changed
                   className="block w-full text-left px-4 py-2 hover:bg-green-400"
                 >
                   English
                 </button>
                 <button
-                  onClick={() => changeLanguage('de-ES')}
+                  onClick={() => { changeLanguage('de-ES'); closeMobileMenu(); }} // Close mobile menu when language is changed
                   className="block w-full text-left px-4 py-2 hover:bg-green-400"
                 >
                   Deutsch
@@ -221,6 +233,7 @@ const Navbar: React.FC<{ dict: any, lang: 'en-US' | 'de-ES' }> = ({ dict, lang }
             className="bg-green-400 px-4 py-2 rounded-full hover:bg-green-500 text-black font-semibold"
             data-aos="fade-down"
             data-aos-delay="1200"
+            onClick={closeMobileMenu} // Close mobile menu when link is clicked
           >
             {dict.nav?.buyNow || "Buy Now"}
           </Link>
