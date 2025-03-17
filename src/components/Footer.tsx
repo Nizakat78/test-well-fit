@@ -21,7 +21,7 @@ const Footer = ({ dict }: { dict: any }) => {
   }, []); // Empty array ensures it runs only once when the component mounts
 
   return (
-    <footer className="bg-gray-900 text-white py-10 px-6 text-center">
+    <footer className="bg-gray-900 text-white py-10 px-6 text-center mt-auto">
       {/* Logo Section */}
       <div className="mb-6" data-aos="fade-up">
         <Image

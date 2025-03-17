@@ -52,9 +52,9 @@ const Joinpresale = ({ dict }: { dict: any }) => {
           <Image
             src="/Joinpresale.svg"
             alt={dict.joinpresale?.imageAlt || "Illustration of a WellFit promotion"}
-            layout="intrinsic"  // This will ensure the image maintains its aspect ratio
-            width={400}
-            height={400}
+            layout="responsive"  // Use 'responsive' for better mobile support
+            width={600}  // Set a fixed width for responsive behavior
+            height={400}  // Set a fixed height for aspect ratio
             className="object-contain rounded-lg"
           />
         </div>
