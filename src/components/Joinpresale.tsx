@@ -50,9 +50,9 @@ const Joinpresale = ({ dict }: { dict: any }) => {
       >
         <div className="relative w-full md:w-80 h-64 md:h-80">
           <Image
-            src="/Joinpresale.png"
+            src="/Joinpresale.svg"
             alt={dict.joinpresale?.imageAlt || "Illustration of a WellFit promotion"}
-            layout="intrinsic"  // This will ensure the image maintains its aspect ratio
+            layout="intrinsic" // This will ensure the image maintains its aspect ratio
             width={400}
             height={400}
             className="object-contain rounded-lg"
